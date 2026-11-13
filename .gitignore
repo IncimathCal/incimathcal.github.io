@@ -6,3 +6,8 @@ CLAUDE.md
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# Astro 构建产物与依赖
+node_modules/
+dist/
+.astro/

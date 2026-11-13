@@ -1,0 +1,39 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import PlatformIcon from './PlatformIcon.astro';
+import { coverClass } from '../lib/cover';
+
+interface Props {
+  entry: CollectionEntry<'articles'>;
+}
+
+const { entry } = Astro.props;
+const d = entry.data;
+const href = d.externalUrl ?? `/articles/${entry.id}/`;
+const dateStr = d.date.toISOString().slice(0, 10);
+---
+
+<a
+  class="card"
+  href={href}
+  target={d.externalUrl ? '_blank' : undefined}
+  rel={d.externalUrl ? 'noopener noreferrer' : undefined}
+>
+  <div
+    class={`cover ${coverClass(entry.id, d.cover)}`}
+    style={d.cover ? `background-image:url('${d.cover}')` : undefined}
+  >
+    {d.duration && <span class="dur">{d.duration}</span>}
+  </div>
+  <div class="card-body">
+    <div class="meta">
+      {dateStr}
+      {d.pinned && <span class="pin">· 置顶</span>}
+    </div>
+    <h3>
+      <span class="t">{d.title}</span>
+      {d.externalUrl && <PlatformIcon label={d.externalSource} />}
+    </h3>
+    <div class="summary">{d.summary}</div>
+  </div>
+</a>

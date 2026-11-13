@@ -1,0 +1,16 @@
+---
+/**
+ * 平台 logo（标题右侧，跟随主题色）。
+ * 当前为占位图形；拿到各平台真实 SVG 后，在此处按 externalSource 分支替换即可，全站自动生效。
+ */
+interface Props {
+  label?: string;
+}
+
+const { label = '外部平台' } = Astro.props;
+---
+
+<svg class="pf" viewBox="0 0 24 24" role="img" aria-label={label} title={label}>
+  <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2.6"></rect>
+  <circle cx="12" cy="12" r="3.2" fill="currentColor"></circle>
+</svg>
