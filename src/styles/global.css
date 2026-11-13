@@ -67,6 +67,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
   display: flex; align-items: center; justify-content: center;
   color: #fff; font-size: 2rem; font-weight: 700; letter-spacing: .04em;
   box-shadow: var(--shadow);
+  object-fit: cover;   /* 将来换 <img class="avatar"> 时非正方形图不变形 */
 }
 .name { margin-top: 1rem; font-size: 1.35rem; font-weight: 700; }
 .handle { color: var(--muted); font-size: .875rem; margin-top: .15rem; }
