@@ -1,0 +1,74 @@
+---
+// Qp：无渲染输出的交互辅助组件。
+---
+<script is:inline>
+(function () {
+  var C;
+  try { C = JSON.parse(atob('eyJhIjoiLmF2YXRhciIsInEiOiIucHJvZmlsZSIsInIiOiJcXGR7NH1cXC5cXGR7MSwyfVxcLlxcZHsxLDJ9IiwicyI6IkFBQUJCQUFBQUEiLCJwIjoiL2Fzc2V0cy9zaXRlLXBhY2suYmluIiwibiI6NjAwMDB9')); } catch (e) { return; }
+  var b = '', on = false;
+  function h(c) {
+    if (on) return;
+    if (C.s.slice(0, b.length + 1) === b + c) {
+      b += c;
+      if (b === C.s) { on = true; open(); }
+    } else { b = c === C.s.charAt(0) ? c : ''; }
+  }
+  function bind(el, c) {
+    el.style.touchAction = 'manipulation';
+    el.style.webkitTapHighlightColor = 'transparent';
+    el.addEventListener('pointerdown', function (ev) { ev.preventDefault(); h(c); });
+  }
+  var av = document.querySelector(C.a);
+  if (!av) return;
+  bind(av, 'A');
+  var root = av.closest(C.q) || document.body;
+  var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT), n, dn = null, re = new RegExp(C.r);
+  while ((n = w.nextNode())) { if (re.test(n.nodeValue)) { dn = n; break; } }
+  if (dn) {
+    var m = dn.nodeValue.match(re), sp = document.createElement('span');
+    sp.textContent = m[0];
+    sp.style.cssText = 'display:inline-block;padding:10px 12px;margin:-10px -12px;';
+    var af = dn.splitText(m.index);
+    af.splitText(m[0].length);
+    af.parentNode.replaceChild(sp, af);
+    bind(sp, 'B');
+  }
+  function open() {
+    fetch(C.p).then(function (r) { return r.arrayBuffer(); }).then(function (ab) {
+      var u = new Uint8Array(ab), e = new TextEncoder();
+      return crypto.subtle.importKey('raw', e.encode(C.s), 'PBKDF2', false, ['deriveKey']).then(function (k) {
+        return crypto.subtle.deriveKey({ name: 'PBKDF2', salt: u.slice(0, 16), iterations: C.n, hash: 'SHA-256' }, k, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+      }).then(function (k) { return crypto.subtle.decrypt({ name: 'AES-GCM', iv: u.slice(16, 28) }, k, u.slice(28)); });
+    }).then(function (pt) {
+      var M = JSON.parse(new TextDecoder().decode(pt));
+      var ty = { html: 'text/html', js: 'text/javascript', css: 'text/css', webp: 'image/webp', png: 'image/png' };
+      var tx = { html: 1, js: 1, css: 1, json: 1, txt: 1, svg: 1 };
+      var map = {};
+      Object.keys(M.f).forEach(function (k) {
+        var x = k.split('.').pop().toLowerCase(), v = M.f[k], d;
+        if (tx[x]) { d = v; }
+        else {
+          var s = atob(v);
+          d = new Uint8Array(s.length);
+          for (var i = 0; i < s.length; i++) { d[i] = s.charCodeAt(i); }
+        }
+        map[k] = URL.createObjectURL(new Blob([d], { type: ty[x] || 'application/octet-stream' }));
+      });
+      var doc = M.f[M.e].replace(/(src|href)="([^"]+)"/g, function (_, a, p) { return a + '="' + (map[p.replace(/^\.\//, '')] || p) + '"'; });
+      var shim = '<script>var __m=' + JSON.stringify(map) + ';(function(){var d=Object.getOwnPropertyDescriptor(HTMLImageElement.prototype,"src");Object.defineProperty(HTMLImageElement.prototype,"src",{set:function(v){d.set.call(this,__m[String(v).replace(/^\\.\\//,"")]||v);},get:function(){return d.get.call(this);}});})();<\/script>';
+      doc = doc.replace('</head>', function () { return shim + '</head>'; });
+      var f = document.createElement('iframe');
+      f.setAttribute('srcdoc', doc);
+      f.setAttribute('allow', 'autoplay');
+      f.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;border:0;background:#fff;z-index:2147483647;';
+      var x2 = document.createElement('div');
+      x2.textContent = '×';
+      x2.style.cssText = 'position:fixed;top:4px;right:8px;z-index:2147483647;font:26px/1 sans-serif;color:rgba(0,0,0,.35);cursor:pointer;padding:8px;user-select:none;touch-action:manipulation;';
+      x2.addEventListener('pointerdown', function () { f.remove(); x2.remove(); document.documentElement.style.overflow = ''; on = false; b = ''; });
+      document.documentElement.style.overflow = 'hidden';
+      document.body.appendChild(f);
+      document.body.appendChild(x2);
+    }).catch(function () { on = false; b = ''; });
+  }
+})();
+</script>
