@@ -35,9 +35,9 @@ const arrow = d.externalUrl ? '↗' : '→';
       {d.linkLabel && <span class="right work-link">{d.linkLabel} {arrow}</span>}
     </div>
     <h3>
-      <span class="t">{d.title}</span>
+      <span class="t" title={d.title}>{d.title}</span>
       {d.externalUrl && <PlatformIcon label={d.externalSource} />}
     </h3>
-    <div class="summary">{d.summary}</div>
+    <div class="summary" title={d.summary}>{d.summary}</div>
   </div>
 </a>
