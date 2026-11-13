@@ -1,0 +1,8 @@
+# 本工作区专用文件，不进入公开仓库
+CLAUDE.md
+/零散操作/
+
+# 系统杂项
+.DS_Store
+Thumbs.db
+Desktop.ini
