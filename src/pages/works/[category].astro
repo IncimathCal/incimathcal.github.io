@@ -1,0 +1,38 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import WorkCard from '../../components/WorkCard.astro';
+import { sortWorks } from '../../lib/sort';
+import { workCategories, type WorkCategory } from '../../lib/categories';
+
+export async function getStaticPaths() {
+  return (Object.keys(workCategories) as WorkCategory[]).map((key) => ({
+    params: { category: key },
+    props: { key },
+  }));
+}
+
+const { key } = Astro.props;
+const cat = workCategories[key];
+const items = sortWorks(
+  await getCollection('works', ({ data }) => !data.draft && data.category === key)
+);
+---
+
+<BaseLayout title={`${cat.label} · Works · IncimathCal`}>
+  <main class="wrap">
+    <nav class="topbar">
+      <a class="site" href="/">IncimathCal</a>
+      <span class="crumb">/ <a href="/works/">Works</a> / {cat.label}</span>
+    </nav>
+    <h1 class="page-title">{cat.label}</h1>
+    <div class="sub-chips">
+      <a class="chip" href="/works/">全部</a>
+      {Object.entries(workCategories).map(([k, c]) => (
+        <a class="chip" href={c.path} classList={{ active: k === key }}>{c.label}</a>
+      ))}
+    </div>
+    {items.map((w) => <WorkCard entry={w} />)}
+    <a class="backlink" href="/works/">← 返回全部 Works</a>
+  </main>
+</BaseLayout>

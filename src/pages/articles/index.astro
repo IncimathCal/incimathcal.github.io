@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { sortArticles } from '../../lib/sort';
+
+const posts = sortArticles(await getCollection('articles', ({ data }) => !data.draft));
+---
+
+<BaseLayout title="Blog · IncimathCal">
+  <main class="wrap">
+    <nav class="topbar">
+      <a class="site" href="/">IncimathCal</a>
+      <span class="crumb">/ Blog</span>
+    </nav>
+    <h1 class="page-title">Blog</h1>
+    {posts.map((p) => <ArticleCard entry={p} />)}
+  </main>
+</BaseLayout>

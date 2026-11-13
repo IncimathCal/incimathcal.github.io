@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import WorkCard from '../../components/WorkCard.astro';
+import { sortWorks } from '../../lib/sort';
+import { workCategories } from '../../lib/categories';
+
+const items = sortWorks(await getCollection('works', ({ data }) => !data.draft));
+---
+
+<BaseLayout title="Works · IncimathCal">
+  <main class="wrap">
+    <nav class="topbar">
+      <a class="site" href="/">IncimathCal</a>
+      <span class="crumb">/ Works</span>
+    </nav>
+    <h1 class="page-title">Works</h1>
+    <div class="sub-chips">
+      {Object.values(workCategories).map((c) => (
+        <a class="chip" href={c.path}>{c.label}</a>
+      ))}
+    </div>
+    {items.map((w) => <WorkCard entry={w} />)}
+  </main>
+</BaseLayout>

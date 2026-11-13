@@ -1,0 +1,36 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// 只为本站文章生成详情页；外链文章（externalUrl）整卡直跳，不占路由
+export async function getStaticPaths() {
+  const posts = await getCollection('articles', ({ data }) => !data.draft && !data.externalUrl);
+  return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const dateStr = post.data.date.toISOString().slice(0, 10);
+---
+
+<BaseLayout title={`${post.data.title} · IncimathCal`}>
+  <main class="wrap">
+    <nav class="topbar">
+      <a class="site" href="/">IncimathCal</a>
+      <span class="crumb">/ <a href="/articles/">Blog</a></span>
+    </nav>
+    <article>
+      <header class="post-head">
+        <h1 class="page-title">{post.data.title}</h1>
+        <div class="meta">
+          {dateStr}
+          {post.data.pinned && <span class="pin">· 置顶</span>}
+        </div>
+      </header>
+      <div class="prose">
+        <Content />
+      </div>
+    </article>
+    <a class="backlink" href="/articles/">← 返回 Blog</a>
+  </main>
+</BaseLayout>

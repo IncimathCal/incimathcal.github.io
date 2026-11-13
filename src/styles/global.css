@@ -187,3 +187,32 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
 .g6 { background: linear-gradient(135deg, #b7791f, #f6ad55); }
 .g7 { background: linear-gradient(135deg, #6b46c1, #b794f4); }
 .g8 { background: linear-gradient(135deg, #2f855a, #68d391); }
+
+/* ===== 内容子页（/articles、/works 及详情） ===== */
+.wrap { max-width: 880px; margin: 0 auto; padding: 2.2rem 1.2rem 4rem; }
+.topbar { display: flex; align-items: baseline; gap: .6rem; margin-bottom: 1.4rem; }
+.topbar .site { font-weight: 700; color: var(--text); text-decoration: none; }
+.topbar .site:hover { color: var(--accent); }
+.topbar .crumb { color: var(--muted); font-size: .85rem; }
+.topbar .crumb a { color: var(--muted); text-decoration: none; }
+.topbar .crumb a:hover { color: var(--accent); }
+.page-title { font-size: 1.5rem; font-weight: 700; margin-bottom: .4rem; }
+.post-head { margin-bottom: 1.4rem; }
+.post-head .meta { font-size: .8rem; color: var(--muted); display: flex; gap: .45rem; }
+.sub-chips { display: flex; gap: .4rem; margin: 0 0 1.2rem; flex-wrap: wrap; }
+.chip.active { color: var(--accent); border-color: var(--accent); background: var(--accent-weak); }
+
+/* Markdown 正文排版 */
+.prose { line-height: 1.75; }
+.prose p { margin: .85rem 0; }
+.prose h2 { margin: 1.6rem 0 .6rem; font-size: 1.2rem; }
+.prose h3 { margin: 1.3rem 0 .5rem; font-size: 1.05rem; }
+.prose ul, .prose ol { margin: .85rem 0 .85rem 1.4rem; }
+.prose a { color: var(--accent); }
+.prose code { background: var(--accent-weak); border-radius: 4px; padding: .1em .35em; font-size: .9em; }
+.prose pre { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: .9rem 1rem; overflow-x: auto; margin: 1rem 0; }
+.prose pre code { background: none; padding: 0; }
+.prose img { max-width: 100%; border-radius: 10px; }
+.prose blockquote { border-left: 3px solid var(--accent); padding: .2rem .9rem; color: var(--muted); margin: 1rem 0; }
+.backlink { display: inline-block; margin-top: 2.2rem; font-size: .85rem; font-weight: 600; color: var(--accent); text-decoration: none; }
+.backlink:hover { text-decoration: underline; }
