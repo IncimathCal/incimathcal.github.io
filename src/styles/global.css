@@ -216,3 +216,26 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
 .prose blockquote { border-left: 3px solid var(--accent); padding: .2rem .9rem; color: var(--muted); margin: 1rem 0; }
 .backlink { display: inline-block; margin-top: 2.2rem; font-size: .85rem; font-weight: 600; color: var(--accent); text-decoration: none; }
 .backlink:hover { text-decoration: underline; }
+
+/* ===== 移动端顶栏与适配（≤900px；PC 下全部不生效） ===== */
+.site-header { display: none; }
+
+@media (max-width: 900px) {
+  .site-header {
+    display: flex; align-items: center; gap: 1rem;
+    position: fixed; inset: 0 0 auto 0; height: 52px; z-index: 50;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 0 1rem;
+  }
+  .site-header .brand { font-weight: 700; color: var(--text); text-decoration: none; margin-right: auto; }
+  .site-header nav { display: flex; gap: .9rem; }
+  .site-header nav a { color: var(--muted); text-decoration: none; font-size: .88rem; }
+  .site-header nav a:hover { color: var(--accent); }
+
+  body { padding-top: 52px; }
+  /* 首页：只保留资料栏，正常文档流滚动 */
+  .page { display: block; height: auto; }
+  .col { overflow: visible; padding: 1.6rem 1.1rem 2.5rem; }
+  .col + .col { border-left: none; }
+  .col.articles, .col.works { display: none; }
+}
