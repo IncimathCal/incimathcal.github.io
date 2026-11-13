@@ -10,8 +10,8 @@ interface Props {
 
 const { entry } = Astro.props;
 const d = entry.data;
-// 外链直跳；站内条目暂时指向 Works 列表页（阶段 4 上线）
-const href = d.externalUrl ?? `/works/${d.category}/`;
+// 外链直跳；站内作品跳自己的详情页（src/pages/works/[category]/[id].astro）
+const href = d.externalUrl ?? `/works/${d.category}/${entry.id}/`;
 const dateStr = d.date.toISOString().slice(0, 10);
 const cat = workCategories[d.category];
 const arrow = d.externalUrl ? '↗' : '→';

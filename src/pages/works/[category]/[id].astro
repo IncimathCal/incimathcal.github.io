@@ -1,0 +1,41 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { workCategories } from '../../../lib/categories';
+
+// 只为没有 externalUrl 的作品生成站内详情页（与 Blog 文章同款机制）；外链作品整卡直跳
+export async function getStaticPaths() {
+  const items = await getCollection('works', ({ data }) => !data.draft && !data.externalUrl);
+  return items.map((w) => ({
+    params: { category: w.data.category, id: w.id },
+    props: { work: w },
+  }));
+}
+
+const { work } = Astro.props;
+const { Content } = await render(work);
+const dateStr = work.data.date.toISOString().slice(0, 10);
+const cat = workCategories[work.data.category];
+---
+
+<BaseLayout title={`${work.data.title} · IncimathCal`}>
+  <main class="wrap">
+    <nav class="topbar">
+      <a class="site" href="/">IncimathCal</a>
+      <span class="crumb">/ <a href="/works/">Works</a> / <a href={cat.path}>{cat.label}</a></span>
+    </nav>
+    <article>
+      <header class="post-head">
+        <h1 class="page-title">{work.data.title}</h1>
+        <div class="meta">
+          <span class={`badge-cat cat-${work.data.category}`}>{cat.label}</span>
+          {dateStr}
+        </div>
+      </header>
+      <div class="prose">
+        <Content />
+      </div>
+    </article>
+    <a class="backlink" href={cat.path}>← 返回 {cat.label}</a>
+  </main>
+</BaseLayout>
