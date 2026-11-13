@@ -27,6 +27,7 @@ const arrow = d.externalUrl ? '↗' : '→';
     class={`cover ${coverClass(entry.id, d.cover)}`}
     style={d.cover ? `background-image:url('${d.cover}')` : undefined}
   >
+    {d.duration && <span class="dur">{d.duration}</span>}
   </div>
   <div class="card-body">
     <div class="meta">

@@ -30,6 +30,7 @@ const works = defineCollection({
     cover: z.string().optional(),
     externalUrl: z.string().url().optional(),
     externalSource: z.string().optional(),      // 如 "GitHub" / "Bilibili"
+    duration: z.string().optional(),            // 视频时长角标，如 "57:37"
     linkLabel: z.string().optional(),           // 卡片右侧链接文案，如 "项目主页"；外链自动加 ↗，站内加 →
     draft: z.boolean().default(false),
     order: z.number().optional(),               // 主页自定义排序：小者靠前，未设置按日期倒序
