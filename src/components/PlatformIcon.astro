@@ -1,16 +1,39 @@
 ---
 /**
  * 平台 logo（标题右侧，跟随主题色）。
- * 当前为占位图形；拿到各平台真实 SVG 后，在此处按 externalSource 分支替换即可，全站自动生效。
+ * 图标源文件在 src/assets/icons/*.svg，构建时原样内嵌——避免手抄 path 出错；
+ * 硬编码品牌色统一替换为 currentColor，深浅色主题自动适配。
+ * 新增平台：放一个 svg 进 src/assets/icons/，再在 iconMap 加一行映射。
  */
+const files = import.meta.glob('../assets/icons/*.svg', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>;
+
+// key = md frontmatter 里 externalSource 的文字；value = 文件名（不含 .svg）
+const iconMap: Record<string, string> = {
+  '微信公众号': 'wechat',
+  'Bilibili': 'bilibili',
+  'GitHub': 'github',
+};
+
 interface Props {
   label?: string;
 }
 
 const { label = '外部平台' } = Astro.props;
+const file = label ? files[`../assets/icons/${iconMap[label]}.svg`] : undefined;
+const svg = file
+  ?.replace(/fill="[^"]*"/g, 'fill="currentColor"') // 品牌色 → 主题色
+  .replace('<svg ', '<svg class="pf" ');             // 挂上 .pf 尺寸/颜色类
 ---
 
-<svg class="pf" viewBox="0 0 24 24" role="img" aria-label={label} title={label}>
-  <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2.6"></rect>
-  <circle cx="12" cy="12" r="3.2" fill="currentColor"></circle>
-</svg>
+{svg ? (
+  <span class="pf-wrap" role="img" aria-label={label} title={label} set:html={svg} />
+) : (
+  <svg class="pf" viewBox="0 0 24 24" role="img" aria-label={label} title={label}>
+    <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2.6"></rect>
+    <circle cx="12" cy="12" r="3.2" fill="currentColor"></circle>
+  </svg>
+)}

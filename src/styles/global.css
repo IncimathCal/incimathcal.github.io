@@ -157,6 +157,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
 }
 /* 平台 logo：标题右侧，跟随主题色 */
 .pf { flex: none; width: 14px; height: 14px; color: var(--accent); opacity: .9; }
+.pf-wrap { display: inline-flex; }
 
 .badge-cat {
   font-size: .68rem; font-weight: 650; padding: .08rem .5rem; border-radius: 999px;
