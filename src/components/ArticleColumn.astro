@@ -3,10 +3,9 @@ import { getCollection } from 'astro:content';
 import ArticleCard from './ArticleCard.astro';
 import { sortArticles } from '../lib/sort';
 
-// 主页只展示最近的 15 张，"查看更多"导向 /articles（阶段 4）
-const posts = sortArticles(
-  await getCollection('articles', ({ data }) => !data.draft)
-).slice(0, 15);
+// 主页只展示最近的 15 张；全部装得下就不显示"查看更多"
+const all = sortArticles(await getCollection('articles', ({ data }) => !data.draft));
+const posts = all.slice(0, 15);
 ---
 
 <section class="col articles">
@@ -14,5 +13,5 @@ const posts = sortArticles(
     <a class="col-title" href="/articles/">Blog<span class="arrow">↗</span></a>
   </div>
   {posts.map((p) => <ArticleCard entry={p} />)}
-  <a class="more" href="/articles/">查看更多 →</a>
+  {all.length > posts.length && <a class="more" href="/articles/">查看更多 →</a>}
 </section>

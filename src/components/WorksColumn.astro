@@ -4,9 +4,8 @@ import WorkCard from './WorkCard.astro';
 import { sortWorks } from '../lib/sort';
 import { workCategories } from '../lib/categories';
 
-const items = sortWorks(
-  await getCollection('works', ({ data }) => !data.draft)
-).slice(0, 15);
+const all = sortWorks(await getCollection('works', ({ data }) => !data.draft));
+const items = all.slice(0, 15); // 全部装得下就不显示"查看更多"
 ---
 
 <section class="col works">
@@ -19,5 +18,5 @@ const items = sortWorks(
     </div>
   </div>
   {items.map((w) => <WorkCard entry={w} />)}
-  <a class="more" href="/works/">查看更多 →</a>
+  {all.length > items.length && <a class="more" href="/works/">查看更多 →</a>}
 </section>
