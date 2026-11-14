@@ -1,7 +1,7 @@
 ---
 title: 上海轨道交通研究资料存档
 date: 2026-11-14
-summary: 上海轨道交通相关研究资料存档。
+summary: 上海轨道交通相关研究资料存档
 cover: /images/covers/shanghai-rail-research-archive.jpg
 ---
 

@@ -2,7 +2,7 @@
 title: 3/4号线改造：共线的探索与破局
 category: academic
 date: 2025-03-24
-summary: 现在看来我的部分搞的有点水。
+summary: 现在看来我的部分搞的有点水
 cover: /images/covers/line-34-sharing-ppt.jpg
 externalUrl: https://mp.weixin.qq.com/s/9Pra-wwEaHHUZ4A4nU_f0A?lang=zh_CN
 externalSource: 微信公众号

@@ -1,7 +1,7 @@
 ---
 title: 轨道交通研究书籍刊物分享（主上海）
 date: 2026-11-15
-summary: 暂且先放这些并附下载。
+summary: 暂且先放这些并附下载
 cover: /images/covers/rail-books-sharing.jpg
 tags: [轨道交通, 存档]
 ---
