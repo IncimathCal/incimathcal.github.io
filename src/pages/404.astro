@@ -45,9 +45,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     color: var(--text);
     text-decoration: none;
     font-weight: 600;
-    transition: background .15s ease;
+    transition: border-color .45s var(--ease), box-shadow .45s var(--ease);
   }
   .home:hover {
-    background: var(--divider);
+    border-color: var(--text);
+    box-shadow: 0 0 0 2px var(--text);
   }
 </style>

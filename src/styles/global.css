@@ -1,15 +1,20 @@
 /* ===== 设计变量（换肤只动这里） ===== */
+/* 查看更多合拢动画的可过渡属性：--gap 虚线间距 / --dc 虚线色 / --sc 覆盖层色 */
+@property --gap { syntax:"<length>"; initial-value:6px; inherits:false; }
+@property --dc  { syntax:"<color>";  initial-value:#767676; inherits:false; }
+@property --sc  { syntax:"<color>";  initial-value:transparent; inherits:false; }
+
+/* 黑白灰直角体系：全站仅 黑(#000) / 白(#fff) / 达标界灰(#767676) / 墨蓝(正文链接) */
 :root {
-  --bg: #f5f6f8;
+  --bg: #ffffff;
   --surface: #ffffff;
-  --border: #e4e7ec;
-  --divider: #e9ebef;
-  --text: #1f2328;
-  --muted: #66707d;
-  --accent: #4f6ef7;
-  --shadow: 0 1px 2px rgba(15, 20, 30, .05), 0 3px 10px rgba(15, 20, 30, .06);
-  --shadow-hover: 0 2px 4px rgba(15, 20, 30, .07), 0 8px 20px rgba(15, 20, 30, .10);
-  --scroll-thumb: #c9ced8;
+  --border: #767676;
+  --divider: #767676;
+  --text: #000000;
+  --muted: #767676;
+  --accent: #1e4e8c;
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --scroll-thumb: #767676;
   --radius: 0;
   --font: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
 }
@@ -45,12 +50,8 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
 
 /* ===== 第一栏：个人资料 ===== */
 .avatar {
-  width: 96px; height: 96px; border-radius: 50%;
-  background: linear-gradient(135deg, #4f6ef7, #9a6df2);
-  display: flex; align-items: center; justify-content: center;
-  color: #fff; font-size: 2rem; font-weight: 700; letter-spacing: .04em;
-  box-shadow: var(--shadow);
-  object-fit: cover;   /* 将来换 <img class="avatar"> 时非正方形图不变形 */
+  width: 96px; height: 96px; border-radius: 50%;   /* 全站唯一保留的圆 */
+  object-fit: cover;   /* 非正方形头像图不变形 */
 }
 .name { margin-top: 1rem; font-size: 1.35rem; font-weight: 700; }
 .handle { color: var(--muted); font-size: .875rem; margin-top: .15rem; }
@@ -66,12 +67,11 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
   display: flex; align-items: center;
   padding: .5rem .9rem; margin-bottom: .55rem;
   border: 1px solid var(--border); border-radius: 0;
-  box-shadow: var(--shadow);
   color: var(--text); text-decoration: none; font-size: .9rem;
-  transition: border-color .15s ease;
+  transition: border-color .45s var(--ease), box-shadow .45s var(--ease);
 }
 .link-row:last-child { margin-bottom: 0; }
-.link-row:hover { border-color: var(--text); }
+.link-row:hover { border-color: var(--text); box-shadow: 0 0 0 2px var(--text); }
 .link-row .id { color: var(--muted); margin-left: auto; font-size: .8rem; }
 
 /* ===== 栏标题 ===== */
@@ -87,9 +87,10 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
 .chip {
   font-size: .75rem; padding: .18rem .65rem; border-radius: 0;
   background: var(--surface); border: 1px solid var(--border);
-  color: var(--muted); text-decoration: none; transition: all .15s ease;
+  color: var(--muted); text-decoration: none;
+  transition: border-color .45s var(--ease), box-shadow .45s var(--ease);
 }
-.chip:hover { border-color: var(--text); }
+.chip:hover { border-color: var(--text); box-shadow: 0 0 0 2px var(--text); }
 
 /* ===== 横排卡片：约 1:5，左 1/5 题图 + 右侧三行 ===== */
 .card {
@@ -98,14 +99,11 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
   align-items: stretch;
   background: var(--surface); border: 1px solid var(--border);
   border-radius: var(--radius); overflow: hidden; text-decoration: none;
-  color: var(--text); box-shadow: var(--shadow);
-  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  color: var(--text);
+  transition: border-color .45s var(--ease), box-shadow .45s var(--ease);
 }
 .card + .card { margin-top: .7rem; }
-.card:hover {
-  transform: translateY(-2px); box-shadow: var(--shadow-hover);
-  border-color: var(--text);
-}
+.card:hover { border-color: var(--text); box-shadow: 0 0 0 2px var(--text); }
 .cover { position: relative; min-height: 100%; }
 .cover.has-img { background-size: cover; background-position: center; }
 .cover .dur {
@@ -145,13 +143,30 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
 }
 .work-link { font-size: .72rem; font-weight: 600; color: var(--muted); }
 
+/* 查看更多：无 border，虚线由 8 条 repeating-gradient 画成（每边两半、锚定边中点），
+   悬停 --gap 收拢、线色灰→黑，同时 4 条纯色线（--sc）渐显接管盖掉亚像素接缝；
+   进出场走同一条 transition，移出时对称展开。0.495s = 0.55s 提前 10% 收尾 */
 .more {
   display: block; text-align: center; margin-top: 1rem;
   font-size: .85rem; font-weight: 600; color: var(--muted); text-decoration: none;
-  padding: .5rem; border: 1px dashed var(--border);
-  border-radius: 0; transition: border-color .15s ease;
+  padding: .5rem;
+  --gap: 6px; --dc: var(--muted); --sc: transparent;
+  transition: --gap .495s var(--ease), --dc .495s var(--ease), --sc .495s var(--ease);
+  background:
+    linear-gradient(var(--sc),var(--sc)) 0 0/100% 1px no-repeat,
+    linear-gradient(var(--sc),var(--sc)) 0 100%/100% 1px no-repeat,
+    linear-gradient(var(--sc),var(--sc)) 0 0/1px 100% no-repeat,
+    linear-gradient(var(--sc),var(--sc)) 100% 0/1px 100% no-repeat,
+    repeating-linear-gradient(270deg, var(--dc) 0 5px, transparent 5px calc(5px + var(--gap))) 0 0/50% 1px no-repeat,
+    repeating-linear-gradient(90deg,  var(--dc) 0 5px, transparent 5px calc(5px + var(--gap))) 100% 0/50% 1px no-repeat,
+    repeating-linear-gradient(270deg, var(--dc) 0 5px, transparent 5px calc(5px + var(--gap))) 0 100%/50% 1px no-repeat,
+    repeating-linear-gradient(90deg,  var(--dc) 0 5px, transparent 5px calc(5px + var(--gap))) 100% 100%/50% 1px no-repeat,
+    repeating-linear-gradient(0deg,   var(--dc) 0 5px, transparent 5px calc(5px + var(--gap))) 0 0/1px 50% no-repeat,
+    repeating-linear-gradient(180deg, var(--dc) 0 5px, transparent 5px calc(5px + var(--gap))) 0 100%/1px 50% no-repeat,
+    repeating-linear-gradient(0deg,   var(--dc) 0 5px, transparent 5px calc(5px + var(--gap))) 100% 0/1px 50% no-repeat,
+    repeating-linear-gradient(180deg, var(--dc) 0 5px, transparent 5px calc(5px + var(--gap))) 100% 100%/1px 50% no-repeat;
 }
-.more:hover { border-color: var(--text); }
+.more:hover { --gap: 0px; --dc: var(--text); --sc: var(--text); }
 
 /* 题图渐变占位配色 */
 .g1 { background: linear-gradient(135deg, #4f6ef7, #7d8cf0); }
@@ -175,7 +190,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
 .post-head { margin-bottom: 1.4rem; }
 .post-head .meta { font-size: .8rem; color: var(--muted); display: flex; gap: .45rem; }
 .sub-chips { display: flex; gap: .4rem; margin: 0 0 1.2rem; flex-wrap: wrap; }
-.chip.active { color: var(--text); border-color: var(--muted); background: transparent; }
+.chip.active { color: var(--text); border-color: var(--text); background: transparent; }
 
 /* Markdown 正文排版 */
 .prose { line-height: 1.75; }
@@ -185,7 +200,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
 .prose ul, .prose ol { margin: .85rem 0 .85rem 1.4rem; }
 .prose a { color: var(--accent); text-decoration: underline; }
 .prose a:hover { color: var(--text); }
-.prose code { background: var(--divider); border-radius: 0; padding: .1em .35em; font-size: .9em; }
+.prose code { background: rgba(0,0,0,.06); border-radius: 0; padding: .1em .35em; font-size: .9em; }
 .prose pre { background: var(--surface); border: 1px solid var(--border); border-radius: 0; padding: .9rem 1rem; overflow-x: auto; margin: 1rem 0; }
 .prose pre code { background: none; padding: 0; }
 .prose img { max-width: 100%; border-radius: 0; }
