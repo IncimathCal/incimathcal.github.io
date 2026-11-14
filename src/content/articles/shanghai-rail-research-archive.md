@@ -1,12 +1,9 @@
 ---
 title: 上海轨道交通研究资料存档
-category: misc
 date: 2026-11-14
-summary: 上海轨道交通相关研究网页的快照存档（scctpi / supdri / 地铁族，共 30 篇）。
+summary: 上海轨道交通相关研究资料存档。
 cover: /images/covers/shanghai-rail-research-archive.jpg
 ---
-
-研究资料网页快照，点击链接查看。
 
 ## 网页存档
 
