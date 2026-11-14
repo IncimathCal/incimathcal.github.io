@@ -4,9 +4,13 @@ import Header from '../components/Header.astro';
 
 interface Props {
   title?: string;
+  description?: string;
 }
 
 const { title = 'IncimathCal' } = Astro.props;
+const description =
+  Astro.props.description ?? 'IncimathCal 的个人主页：上海市轨道交通建设规划研究、音游、工具与杂项产出。';
+const ogImage = new URL('/Avatar.jpg', Astro.site);
 ---
 
 <!DOCTYPE html>
@@ -17,6 +21,12 @@ const { title = 'IncimathCal' } = Astro.props;
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:site_name" content="IncimathCal" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary" />
   </head>
   <body>
     <Header />

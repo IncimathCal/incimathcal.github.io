@@ -13,7 +13,7 @@ const { Content } = await render(post);
 const dateStr = post.data.date.toISOString().slice(0, 10);
 ---
 
-<BaseLayout title={`${post.data.title} · IncimathCal`}>
+<BaseLayout title={`${post.data.title} · IncimathCal`} description={post.data.summary}>
   <main class="wrap">
     <nav class="topbar">
       <a class="site" href="/">IncimathCal</a>

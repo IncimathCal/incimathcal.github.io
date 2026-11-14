@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="404 · IncimathCal">
+  <main class="nf">
+    <div class="code">404</div>
+    <h1>页面不存在</h1>
+    <p>地址可能有误，或者这个页面已经移动了。</p>
+    <a class="home" href="/">← 回到主页</a>
+  </main>
+</BaseLayout>
+
+<style>
+  .nf {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 1.5rem;
+    text-align: center;
+  }
+  .code {
+    font-size: clamp(4rem, 14vw, 7rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+  }
+  h1 {
+    font-size: 1.25rem;
+    margin: 1rem 0 0;
+  }
+  p {
+    color: var(--muted);
+    margin: 0.5rem 0 0;
+  }
+  .home {
+    margin-top: 1.6rem;
+    padding: 0.55rem 1.2rem;
+    border-radius: 999px;
+    background: var(--accent-weak);
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .home:hover {
+    background: var(--accent);
+    color: #fff;
+  }
+</style>

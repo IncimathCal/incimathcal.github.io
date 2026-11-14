@@ -18,7 +18,7 @@ const dateStr = work.data.date.toISOString().slice(0, 10);
 const cat = workCategories[work.data.category];
 ---
 
-<BaseLayout title={`${work.data.title} · IncimathCal`}>
+<BaseLayout title={`${work.data.title} · IncimathCal`} description={work.data.summary}>
   <main class="wrap">
     <nav class="topbar">
       <a class="site" href="/">IncimathCal</a>
