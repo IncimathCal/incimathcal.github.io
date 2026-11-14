@@ -60,21 +60,19 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
 .bio p + p { margin-top: .6rem; }
 .divider { border: none; border-top: 1px solid var(--border); margin: 1.4rem 0; }
 .links-label {
-  font-size: .75rem; font-weight: 600; text-transform: uppercase;
-  letter-spacing: .08em; color: var(--muted); margin-bottom: .6rem;
+  font-size: .75rem; font-weight: 700;
+  color: var(--text); margin-bottom: .6rem;
 }
 .link-row {
-  display: flex; align-items: center; gap: .6rem;
-  padding: .5rem .6rem; margin: 0 -.6rem; border-radius: 10px;
+  display: flex; align-items: center;
+  padding: .5rem .9rem; margin-bottom: .55rem;
+  border: 1px solid var(--border); border-radius: 10px;
+  box-shadow: var(--shadow);
   color: var(--text); text-decoration: none; font-size: .9rem;
   transition: background .15s ease;
 }
+.link-row:last-child { margin-bottom: 0; }
 .link-row:hover { background: var(--accent-weak); }
-.link-dot {
-  width: 26px; height: 26px; border-radius: 8px; flex: none;
-  display: flex; align-items: center; justify-content: center;
-  color: #fff; font-size: .7rem; font-weight: 700;
-}
 .link-row .id { color: var(--muted); margin-left: auto; font-size: .8rem; }
 
 /* ===== 栏标题 ===== */
