@@ -14,24 +14,8 @@
   --radius: 12px;
   --font: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0f1115;
-    --surface: #171a21;
-    --border: #272d39;
-    --divider: #222835;
-    --text: #e6e8ec;
-    --muted: #98a1af;
-    --accent: #7b96ff;
-    --accent-weak: #1d2438;
-    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 3px 10px rgba(0,0,0,.35);
-    --shadow-hover: 0 2px 4px rgba(0,0,0,.5), 0 8px 20px rgba(0,0,0,.45);
-    --scroll-thumb: #2e3542;
-  }
-}
-
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { color-scheme: light dark; }
+html { color-scheme: light; }
 body { background: var(--bg); color: var(--text); font-family: var(--font); }
 
 /* ===== 三栏骨架 ===== */
@@ -144,7 +128,6 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
 }
 .meta .right { margin-left: auto; }
 .pin { color: #b07800; font-weight: 650; }
-@media (prefers-color-scheme: dark) { .pin { color: #ffd479; } }
 .card h3 {
   font-size: .92rem; font-weight: 650; line-height: 1.4;
   display: flex; align-items: center; gap: .3rem;
@@ -165,11 +148,6 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
 .cat-academic { background: #e8f0fe; color: #2b5fd9; }
 .cat-tools    { background: #e6f7ee; color: #178a53; }
 .cat-misc     { background: #fdf0e6; color: #c2621a; }
-@media (prefers-color-scheme: dark) {
-  .cat-academic { background: #1c2740; color: #8fb0ff; }
-  .cat-tools    { background: #122e21; color: #6fd8a4; }
-  .cat-misc     { background: #33230f; color: #ffb066; }
-}
 .work-link { font-size: .72rem; font-weight: 600; color: var(--accent); }
 
 .more {
