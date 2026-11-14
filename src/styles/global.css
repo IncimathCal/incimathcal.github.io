@@ -35,6 +35,9 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
   min-height: 0;              /* grid item 内 overflow 生效的关键 */
   overflow-y: auto;
   overscroll-behavior: contain;
+  /* 占位式滚动条平时隐形但仍占宽（右侧多出的隐形空隙就是它），
+     both-edges 让左侧也留等宽的槽使左右对称；overlay 滚动条平台自动无槽 */
+  scrollbar-gutter: stable both-edges;
   padding: 2.2rem clamp(.9rem, 1.6vw, 1.6rem) 3rem;
 }
 .col + .col { border-left: 1px solid var(--divider); }
