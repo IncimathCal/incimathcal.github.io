@@ -1,0 +1,81 @@
+﻿  $('.header  .nav-pills  li').removeClass('active');
+       
+        var $info = $('.channelinfo').text();
+       
+        if ($info == '机构介绍') {
+            $('.header .nav-pills  li:nth-child(2)').addClass('active');
+        } else if ($info == '进展动态' ) {
+            $('.header .nav-pills  li:nth-child(3)').addClass('active');
+        } else if ($info == '规划研究') {
+            $('.header .nav-pills  li:nth-child(4)').addClass('active');
+        } else if ($info == '发展研究') {
+            $('.header .nav-pills  li:nth-child(5)').addClass('active');
+        } else if ($info == '年度报告') {
+            $('.header .nav-pills  li:nth-child(6)').addClass('active');
+        } else if ($info == '对外咨询') {
+            $('.header .nav-pills  li:nth-child(7)').addClass('active');
+        } else if ($info == '学术活动') {
+            $('.header .nav-pills  li:nth-child(8)').addClass('active');
+        } else  {
+            $('.header .nav-pills  li:nth-child(1)').addClass('active');
+        } 
+
+
+var Main = function() {
+	"use strict";
+
+	
+	var runManiNav = function() {
+		//响应式导航--infinitypush.js
+		function responsive() {
+			if($(window).width() <= 767){
+				console.log('mobile navigation');
+				$('#mobile-navigation').infinitypush({
+					offcanvasleft: false
+				});
+				$('body').addClass('mobile');
+				$('body').removeClass('desktop');
+				
+			} else {
+				console.log('desktop navigation');
+				$('#mobile-navigation').infinitypush({
+					destroy:true
+				});
+				$('body').removeClass('mobile');
+				$('body').addClass('desktop');
+			}
+			
+		}
+		function windowResize(){
+			$(window).resize(function(){
+				responsive();
+			});
+		}
+		responsive();
+		windowResize();
+
+        $(document).ready( function() {
+            $('.stickUp-Nav').stickUp();
+        });
+		
+
+		
+		//导航 dropdown 鼠标划过自动下拉菜单
+		if($('.desktop .dropdown').length){
+    		$(".dropdown").hover(
+        		function() { $('.dropdown-menu', this).fadeIn("fast");
+        	},
+        	function() { $('.dropdown-menu', this).fadeOut("fast");
+    		});
+		}
+	};
+	
+	
+	return {
+		//main function to initiate template pages
+		init : function() {
+			runManiNav();
+		}
+	};
+}();
+
