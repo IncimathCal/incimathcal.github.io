@@ -3,7 +3,8 @@ import { getCollection } from 'astro:content';
 import ArticleCard from './ArticleCard.astro';
 import { sortArticles } from '../lib/sort';
 
-// 主页只展示最近的 15 张；全部装得下就不显示"查看更多"
+// 主页渲染最近 15 张（PC 上限）；移动端由 CSS 只显示前 10 条。
+// 超过 10 条即显示"查看更多"（移动端裁剪线；PC 端 11~15 条时也顺带出现，无害）。
 const all = sortArticles(await getCollection('articles', ({ data }) => !data.draft));
 const posts = all.slice(0, 15);
 ---
@@ -13,5 +14,5 @@ const posts = all.slice(0, 15);
     <a class="col-title" href="/articles/">Blog<span class="arrow">↗</span></a>
   </div>
   {posts.map((p) => <ArticleCard entry={p} />)}
-  {all.length > posts.length && <a class="more" href="/articles/">查看更多 →</a>}
+  {all.length > 10 && <a class="more" href="/articles/">查看更多 →</a>}
 </section>

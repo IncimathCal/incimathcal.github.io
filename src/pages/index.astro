@@ -7,10 +7,36 @@ import Qp from '../components/Qp.astro';
 ---
 
 <BaseLayout>
+  <!-- 移动端首页 tab：Info/Blog/Works 渐隐切换（PC 隐藏；无 JS 时隐藏，三栏退化为纵向堆叠） -->
+  <nav class="mtabs">
+    <button class="mtab" type="button" data-k="profile">Info</button>
+    <button class="mtab" type="button" data-k="blog">Blog</button>
+    <button class="mtab" type="button" data-k="works">Works</button>
+  </nav>
   <div class="page">
     <ProfileColumn />
     <ArticleColumn />
     <WorksColumn />
   </div>
   <Qp />
+  <script is:inline>
+    // html.js 类 = "本页有 JS"：CSS 据此启用 tab 叠放布局，无 JS 时保持纵向堆叠
+    document.documentElement.classList.add('js');
+    var panes = [
+      ['profile', '.col.profile'],
+      ['blog', '.col.articles'],
+      ['works', '.col.works'],
+    ];
+    var tabs = document.querySelectorAll('.mtab');
+    function activate(key) {
+      tabs.forEach(function (t) { t.classList.toggle('on', t.dataset.k === key); });
+      panes.forEach(function (p) {
+        document.querySelector(p[1]).classList.toggle('pane-off', p[0] !== key);
+      });
+    }
+    tabs.forEach(function (t) {
+      t.addEventListener('click', function () { activate(t.dataset.k); });
+    });
+    activate('blog'); // 默认落在 Blog：打开即内容
+  </script>
 </BaseLayout>

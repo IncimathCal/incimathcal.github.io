@@ -108,7 +108,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
 .card + .card { margin-top: .7rem; }
 .card:hover { border-color: var(--text); box-shadow: 0 0 0 2px var(--text); }
 .cover { position: relative; min-height: 100%; }
-.cover.has-img { background-size: cover; background-position: center; }
+.cover-img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .cover .dur {
   position: absolute; right: 5px; bottom: 5px;
   font-size: .62rem; font-weight: 600; color: #fff;
@@ -195,6 +195,19 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
 .sub-chips { display: flex; gap: .4rem; margin: 0 0 1.2rem; flex-wrap: wrap; }
 .chip.active { color: var(--text); border-color: var(--text); background: transparent; }
 
+/* 键盘焦点：与悬停同语言的黑色描边（仅键盘导航时出现） */
+a:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+
+/* 减少动态效果：尊重系统"减弱动态"设置，所有动画/过渡瞬时完成 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* Markdown 正文排版 */
 .prose { line-height: 1.75; }
 .prose p { margin: .85rem 0; }
@@ -213,6 +226,8 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
 
 /* ===== 移动端顶栏与适配（≤900px；PC 下全部不生效） ===== */
 .site-header { display: none; }
+/* 移动端首页 tab 条（仅首页渲染；无 JS 时不显示，页面退化为三栏纵向堆叠） */
+.mtabs { display: none; }
 
 @media (max-width: 900px) {
   .site-header {
@@ -227,9 +242,38 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
   .site-header nav a:hover { color: var(--text); }
 
   body { padding-top: 52px; }
-  /* 首页：只保留资料栏，正常文档流滚动 */
+
+  /* 首页 tab 条：吸在顶栏下方 */
+  html.js .mtabs {
+    display: flex; position: sticky; top: 52px; z-index: 50;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+  }
+  .mtab {
+    flex: 1; padding: .6rem 0;
+    font: inherit; font-size: .88rem; font-weight: 600;
+    color: var(--muted); background: none; border: none;
+    border-bottom: 2px solid transparent; cursor: pointer;
+  }
+  .mtab.on { color: var(--text); border-bottom-color: var(--text); }
+
+  /* 有 JS：三栏叠进同一格、渐隐切换（方案D）；无 JS：维持下方 block 纵向堆叠 */
+  html.js .page { display: grid; grid-template-columns: 1fr; height: auto; }
+  html.js .col { grid-area: 1 / 1; transition: opacity .28s ease, visibility .28s ease; }
+  html.js .col.pane-off { opacity: 0; visibility: hidden; pointer-events: none; }
+  html.js .col + .col { border-left: none; }
+
+  /* 首页三栏纵向堆叠（无 JS 的降级形态） */
   .page { display: block; height: auto; }
   .col { overflow: visible; padding: 1.6rem 1.1rem 2.5rem; }
   .col + .col { border-left: none; }
-  .col.articles, .col.works { display: none; }
+
+  /* 每栏只显示前 10 条（col-head 是第 1 个子元素，卡片从第 2 个数起，第 10 张 = 第 11 个） */
+  .col > .card:nth-child(n + 12) { display: none; }
+
+  /* 触屏没有悬停：按下（:active）给与 PC 悬停一致的反馈 */
+  .card:active, .link-row:active, .chip:active {
+    border-color: var(--text); box-shadow: 0 0 0 2px var(--text);
+  }
+  .col-title:active { border-color: var(--text); }
+  .more:active { --gap: 0px; --dc: var(--text); --sc: var(--text); }
 }

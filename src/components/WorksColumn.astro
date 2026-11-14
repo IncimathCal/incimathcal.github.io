@@ -5,7 +5,7 @@ import { sortWorks } from '../lib/sort';
 import { workCategories } from '../lib/categories';
 
 const all = sortWorks(await getCollection('works', ({ data }) => !data.draft));
-const items = all.slice(0, 15); // 全部装得下就不显示"查看更多"
+const items = all.slice(0, 15); // PC 上限；移动端由 CSS 只显示前 10 条，超过 10 条显示"查看更多"
 ---
 
 <section class="col works">
@@ -18,5 +18,5 @@ const items = all.slice(0, 15); // 全部装得下就不显示"查看更多"
     </div>
   </div>
   {items.map((w) => <WorkCard entry={w} />)}
-  {all.length > items.length && <a class="more" href="/works/">查看更多 →</a>}
+  {all.length > 10 && <a class="more" href="/works/">查看更多 →</a>}
 </section>

@@ -1,11 +1,15 @@
 ---
 // 移动端顶部导航（≤900px 显示，PC 隐藏）。放在 BaseLayout，全站生效。
+// 首页不显示 nav：移动端导航由页内 Info/Blog/Works tab 承担。
+const isHome = Astro.url.pathname === '/';
 ---
 
 <header class="site-header">
   <a class="brand" href="/">IncimathCal</a>
-  <nav>
-    <a href="/articles/">Blog</a>
-    <a href="/works/">Works</a>
-  </nav>
+  {!isHome && (
+    <nav>
+      <a href="/articles/">Blog</a>
+      <a href="/works/">Works</a>
+    </nav>
+  )}
 </header>
