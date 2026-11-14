@@ -108,7 +108,8 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
 .card + .card { margin-top: .7rem; }
 .card:hover { border-color: var(--text); box-shadow: 0 0 0 2px var(--text); }
 .cover { position: relative; min-height: 100%; }
-.cover-img { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* 绝对定位铺满：img 不进文档流，卡片行高仍由右侧内容决定（竖图不会把卡片撑变形） */
+.cover-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .cover .dur {
   position: absolute; right: 5px; bottom: 5px;
   font-size: .62rem; font-weight: 600; color: #fff;
