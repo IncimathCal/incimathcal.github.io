@@ -83,7 +83,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
   transition: border-color .15s ease, color .15s ease;
 }
 .col-title:hover { color: var(--accent); border-color: var(--accent); }
-.col-title .arrow { color: var(--accent); margin-left: .3rem; }
+.col-title .arrow { color: var(--muted); margin-left: .3rem; }
 .chips { display: flex; gap: .4rem; margin-left: auto; flex-wrap: wrap; }
 .chip {
   font-size: .75rem; padding: .18rem .65rem; border-radius: 999px;
@@ -125,7 +125,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
   font-size: .72rem; color: var(--muted);
 }
 .meta .right { margin-left: auto; }
-.pin { color: #b07800; font-weight: 650; }
+.pin { color: var(--muted); font-weight: 650; }
 .card h3 {
   font-size: .92rem; font-weight: 650; line-height: 1.4;
   display: flex; align-items: center; gap: .3rem;
@@ -137,21 +137,19 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 /* 平台 logo：标题右侧，跟随主题色 */
-.pf { flex: none; width: 14px; height: 14px; color: var(--accent); opacity: .9; }
+.pf { flex: none; width: 14px; height: 14px; color: var(--muted); opacity: .9; }
 .pf-wrap { display: inline-flex; }
 
 .badge-cat {
   font-size: .68rem; font-weight: 650; padding: .08rem .5rem; border-radius: 999px;
+  border: 1px solid var(--border); color: var(--muted);
 }
-.cat-academic { background: #e8f0fe; color: #2b5fd9; }
-.cat-tools    { background: #e6f7ee; color: #178a53; }
-.cat-misc     { background: #fdf0e6; color: #c2621a; }
-.work-link { font-size: .72rem; font-weight: 600; color: var(--accent); }
+.work-link { font-size: .72rem; font-weight: 600; color: var(--muted); }
 
 .more {
   display: block; text-align: center; margin-top: 1rem;
-  font-size: .85rem; font-weight: 600; color: var(--accent); text-decoration: none;
-  padding: .5rem; border: 1px dashed color-mix(in srgb, var(--accent) 50%, var(--border));
+  font-size: .85rem; font-weight: 600; color: var(--muted); text-decoration: none;
+  padding: .5rem; border: 1px dashed var(--border);
   border-radius: 10px; transition: background .15s ease;
 }
 .more:hover { background: var(--accent-weak); }
@@ -178,7 +176,7 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
 .post-head { margin-bottom: 1.4rem; }
 .post-head .meta { font-size: .8rem; color: var(--muted); display: flex; gap: .45rem; }
 .sub-chips { display: flex; gap: .4rem; margin: 0 0 1.2rem; flex-wrap: wrap; }
-.chip.active { color: var(--accent); border-color: var(--accent); background: var(--accent-weak); }
+.chip.active { color: var(--text); border-color: var(--muted); background: transparent; }
 
 /* Markdown 正文排版 */
 .prose { line-height: 1.75; }
@@ -186,13 +184,14 @@ body { background: var(--bg); color: var(--text); font-family: var(--font); }
 .prose h2 { margin: 1.6rem 0 .6rem; font-size: 1.2rem; }
 .prose h3 { margin: 1.3rem 0 .5rem; font-size: 1.05rem; }
 .prose ul, .prose ol { margin: .85rem 0 .85rem 1.4rem; }
-.prose a { color: var(--accent); }
-.prose code { background: var(--accent-weak); border-radius: 4px; padding: .1em .35em; font-size: .9em; }
+.prose a { color: var(--text); text-decoration: underline; }
+.prose a:hover { color: var(--muted); }
+.prose code { background: var(--divider); border-radius: 4px; padding: .1em .35em; font-size: .9em; }
 .prose pre { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: .9rem 1rem; overflow-x: auto; margin: 1rem 0; }
 .prose pre code { background: none; padding: 0; }
 .prose img { max-width: 100%; border-radius: 10px; }
-.prose blockquote { border-left: 3px solid var(--accent); padding: .2rem .9rem; color: var(--muted); margin: 1rem 0; }
-.backlink { display: inline-block; margin-top: 2.2rem; font-size: .85rem; font-weight: 600; color: var(--accent); text-decoration: none; }
+.prose blockquote { border-left: 3px solid var(--muted); padding: .2rem .9rem; color: var(--muted); margin: 1rem 0; }
+.backlink { display: inline-block; margin-top: 2.2rem; font-size: .85rem; font-weight: 600; color: var(--muted); text-decoration: none; }
 .backlink:hover { text-decoration: underline; }
 
 /* ===== 移动端顶栏与适配（≤900px；PC 下全部不生效） ===== */
