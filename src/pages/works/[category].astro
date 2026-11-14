@@ -29,7 +29,7 @@ const items = sortWorks(
     <div class="sub-chips">
       <a class="chip" href="/works/">全部</a>
       {Object.entries(workCategories).map(([k, c]) => (
-        <a class="chip" href={c.path} classList={{ active: k === key }}>{c.label}</a>
+        <a class="chip" href={c.path} class:list={{ active: k === key }}>{c.label}</a>
       ))}
     </div>
     {items.map((w) => <WorkCard entry={w} />)}

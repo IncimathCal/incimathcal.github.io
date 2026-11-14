@@ -19,10 +19,8 @@ const dateStr = d.date.toISOString().slice(0, 10);
   target={d.externalUrl ? '_blank' : undefined}
   rel={d.externalUrl ? 'noopener noreferrer' : undefined}
 >
-  <div
-    class={`cover ${coverClass(entry.id, d.cover)}`}
-    style={d.cover ? `background-image:url('${d.cover}')` : undefined}
-  >
+  <div class={`cover ${coverClass(entry.id, d.cover)}`}>
+    {d.cover && <img class="cover-img" src={d.cover} alt="" loading="lazy" decoding="async" />}
     {d.duration && <span class="dur">{d.duration}</span>}
   </div>
   <div class="card-body">
