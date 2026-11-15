@@ -11,4 +11,4 @@ cover: /images/covers/chunithm-constants-viewer.jpg
 
 ---
 
-之后可能在这个位置谈谈技术实现。
+今后可能在这个位置谈谈完成这个项目过程中的一些想法。
