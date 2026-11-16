@@ -1,6 +1,6 @@
 ---
 title: CHUNITHM 定数时光机
-date: 2026-07-01
+date: 2026-11-14
 summary: 已上线运行，数据可能存在小幅度滞后，因为需要我手动走更新的workflow
 cover: /images/covers/chunithm-constants-viewer.jpg
 ---
