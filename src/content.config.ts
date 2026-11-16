@@ -19,6 +19,18 @@ const articles = defineCollection({
   }),
 });
 
+// 补档库：被删公众号文章的存档转档（不进首页 Blog 栏、不进 RSS，入口是 deleted-content.md 索引文）
+const deleted = defineCollection({
+  loader: glob({ base: './src/content/deleted', pattern: '**/*.{md,mdx}' }),
+  schema: z.object({
+    title: z.string(),
+    date: z.coerce.date(),                      // 原文发布日期（以索引文为准，页面内嵌时间戳是保存时间不可信）
+    summary: z.string(),
+    cover: z.string().optional(),
+    draft: z.boolean().default(false),
+  }),
+});
+
 // 第三栏 Works：学术成果 / 工具软件 / 其他
 const works = defineCollection({
   loader: glob({ base: './src/content/works', pattern: '**/*.{md,mdx}' }),
@@ -37,4 +49,4 @@ const works = defineCollection({
   }),
 });
 
-export const collections = { articles, works };
+export const collections = { articles, works, deleted };

@@ -1,0 +1,35 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// 补档详情页：只服务 deleted 集合，面包屑与返回都指向索引文《贵蕉应有关部门/单位要求删除的文章汇总》
+export async function getStaticPaths() {
+  const posts = await getCollection('deleted', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const dateStr = post.data.date.toISOString().slice(0, 10);
+---
+
+<BaseLayout title={`${post.data.title} · IncimathCal`} description={post.data.summary}>
+  <main class="wrap">
+    <nav class="topbar">
+      <a class="site" href="/">IncimathCal</a>
+      <span class="crumb">/ <a href="/articles/deleted-content/">补档</a></span>
+    </nav>
+    <article>
+      <header class="post-head">
+        <h1 class="page-title">{post.data.title}</h1>
+        <div class="meta">
+          {dateStr}
+        </div>
+      </header>
+      <div class="prose">
+        <Content />
+      </div>
+    </article>
+    <a class="backlink" href="/articles/deleted-content/">← 返回补档目录</a>
+  </main>
+</BaseLayout>
