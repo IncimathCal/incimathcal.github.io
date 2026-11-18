@@ -224,6 +224,15 @@ a:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
 .prose blockquote { border-left: 3px solid var(--muted); padding: .2rem .9rem; color: var(--muted); margin: 1rem 0; }
 .backlink { display: inline-block; margin-top: 2.2rem; font-size: .85rem; font-weight: 600; color: var(--muted); text-decoration: none; }
 .backlink:hover { text-decoration: underline; }
+/* 上一篇/下一篇：backlink 下方两端对齐，长标题单行截断（完整标题在 title 悬停提示） */
+.pn { display: flex; gap: 1.2rem; margin-top: .8rem; }
+.pn a {
+  flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-size: .85rem; font-weight: 600; color: var(--muted); text-decoration: none;
+}
+.pn a:hover { color: var(--text); text-decoration: underline; }
+.pn a.next { text-align: right; }
 
 /* ===== 移动端顶栏与适配（≤900px；PC 下全部不生效） ===== */
 .site-header { display: none; }

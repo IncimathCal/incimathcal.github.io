@@ -1,19 +1,28 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { sortArticles } from '../../lib/sort';
 
 // 只为本站文章生成详情页；外链文章（externalUrl）整卡直跳，不占路由
 export async function getStaticPaths() {
   const posts = await getCollection('articles', ({ data }) => !data.draft && !data.externalUrl);
-  return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+  const sorted = sortArticles(posts); // 与首页/列表同序，prev/next 沿此顺序
+  return sorted.map((post, i) => ({
+    params: { id: post.id },
+    props: { post, prev: sorted[i - 1] ?? null, next: sorted[i + 1] ?? null },
+  }));
 }
 
-const { post } = Astro.props;
+const { post, prev, next } = Astro.props;
 const { Content } = await render(post);
 const dateStr = post.data.date.toISOString().slice(0, 10);
 ---
 
-<BaseLayout title={`${post.data.title} · IncimathCal`} description={post.data.summary}>
+<BaseLayout
+  title={`${post.data.title} · IncimathCal`}
+  description={post.data.summary}
+  ogImage={post.data.cover}
+>
   <main class="wrap">
     <nav class="topbar">
       <a class="site" href="/">IncimathCal</a>
@@ -32,5 +41,9 @@ const dateStr = post.data.date.toISOString().slice(0, 10);
       </div>
     </article>
     <a class="backlink" href="/articles/">← 返回 Blog</a>
+    <nav class="pn">
+      {prev && <a href={`/articles/${prev.id}/`} title={prev.data.title}>← {prev.data.title}</a>}
+      {next && <a class="next" href={`/articles/${next.id}/`} title={next.data.title}>{next.data.title} →</a>}
+    </nav>
   </main>
 </BaseLayout>

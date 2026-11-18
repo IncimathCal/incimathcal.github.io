@@ -5,12 +5,14 @@ import Header from '../components/Header.astro';
 interface Props {
   title?: string;
   description?: string;
+  ogImage?: string; // 站内路径（/images/...）；不传回落头像。传了 twitter 卡自动升为大图
 }
 
-const { title = 'IncimathCal' } = Astro.props;
+const { title = 'IncimathCal', ogImage: ogImagePath } = Astro.props;
 const description =
   Astro.props.description ?? 'IncimathCal 的个人主页：上海市轨道交通建设规划研究、音游、工具与杂项产出。';
-const ogImage = new URL('/Avatar.jpg', Astro.site);
+const ogImage = new URL(ogImagePath ?? '/Avatar.jpg', Astro.site);
+const twitterCard = ogImagePath ? 'summary_large_image' : 'summary';
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site) : Astro.url;
 ---
 
@@ -30,7 +32,7 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site) : Astro.u
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content={twitterCard} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <link rel="alternate" type="application/rss+xml" title="IncimathCal" href="/rss.xml" />
