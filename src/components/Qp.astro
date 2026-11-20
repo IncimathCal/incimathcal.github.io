@@ -4,7 +4,7 @@
 <script is:inline>
 (function () {
   var C;
-  try { C = JSON.parse(atob('eyJhIjoiLmF2YXRhciIsInEiOiIucHJvZmlsZSIsInIiOiJcXGR7NH1cXC5cXGR7MSwyfVxcLlxcZHsxLDJ9IiwicyI6IkFBQUJCQUFBQUEiLCJwIjoiL2Fzc2V0cy9zaXRlLXBhY2suYmluIiwibiI6NjAwMDB9')); } catch (e) { return; }
+  try { C = JSON.parse(atob('eyJhIjoiLmF2YXRhciIsInEiOiIucHJvZmlsZSIsInIiOiJcXGR7NH1cXC5cXGR7MSwyfVxcLlxcZHsxLDJ9IiwicyI6IkFBQUJCQUFBQUEiLCJwIjoiL2Fzc2V0cy8xNmU0YjE3NS5iaW4iLCJ4IjoiL2Fzc2V0cy8xOTc0MGQyMS5iaW4iLCJnIjoiL2lzcGlyYXJlLyIsIm4iOjYwMDAwfQ==')); } catch (e) { return; }
   var b = '', on = false;
   function h(c) {
     if (on) return;
@@ -33,42 +33,85 @@
     af.parentNode.replaceChild(sp, af);
     bind(sp, 'B');
   }
+  function dk(pass, salt, iter) {
+    var e = new TextEncoder();
+    return crypto.subtle.importKey('raw', e.encode(pass), 'PBKDF2', false, ['deriveKey']).then(function (k) {
+      return crypto.subtle.deriveKey({ name: 'PBKDF2', salt: salt, iterations: iter, hash: 'SHA-256' }, k, { name: 'AES-GCM', length: 256 }, true, ['decrypt']);
+    });
+  }
+  function dec(u, k) {
+    return crypto.subtle.decrypt({ name: 'AES-GCM', iv: u.slice(16, 28) }, k, u.slice(28));
+  }
   function open() {
     fetch(C.p).then(function (r) { return r.arrayBuffer(); }).then(function (ab) {
-      var u = new Uint8Array(ab), e = new TextEncoder();
-      return crypto.subtle.importKey('raw', e.encode(C.s), 'PBKDF2', false, ['deriveKey']).then(function (k) {
-        return crypto.subtle.deriveKey({ name: 'PBKDF2', salt: u.slice(0, 16), iterations: C.n, hash: 'SHA-256' }, k, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
-      }).then(function (k) { return crypto.subtle.decrypt({ name: 'AES-GCM', iv: u.slice(16, 28) }, k, u.slice(28)); });
+      var u = new Uint8Array(ab);
+      return dk(C.s, u.slice(0, 16), C.n).then(function (k) { return dec(u, k); });
     }).then(function (pt) {
-      var M = JSON.parse(new TextDecoder().decode(pt));
-      var ty = { html: 'text/html', js: 'text/javascript', css: 'text/css', webp: 'image/webp', png: 'image/png' };
-      var tx = { html: 1, js: 1, css: 1, json: 1, txt: 1, svg: 1 };
-      var map = {};
-      Object.keys(M.f).forEach(function (k) {
-        var x = k.split('.').pop().toLowerCase(), v = M.f[k], d;
-        if (tx[x]) { d = v; }
-        else {
-          var s = atob(v);
-          d = new Uint8Array(s.length);
-          for (var i = 0; i < s.length; i++) { d[i] = s.charCodeAt(i); }
-        }
-        map[k] = URL.createObjectURL(new Blob([d], { type: ty[x] || 'application/octet-stream' }));
-      });
-      var doc = M.f[M.e].replace(/(src|href)="([^"]+)"/g, function (_, a, p) { return a + '="' + (map[p.replace(/^\.\//, '')] || p) + '"'; });
-      var shim = '<script>var __m=' + JSON.stringify(map) + ';(function(){var d=Object.getOwnPropertyDescriptor(HTMLImageElement.prototype,"src");Object.defineProperty(HTMLImageElement.prototype,"src",{set:function(v){d.set.call(this,__m[String(v).replace(/^\\.\\//,"")]||v);},get:function(){return d.get.call(this);}});})();<\/script>';
-      doc = doc.replace('</head>', function () { return shim + '</head>'; });
-      var f = document.createElement('iframe');
-      f.setAttribute('srcdoc', doc);
-      f.setAttribute('allow', 'autoplay');
-      f.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;border:0;background:#fff;z-index:2147483647;';
-      var x2 = document.createElement('div');
-      x2.textContent = '×';
-      x2.style.cssText = 'position:fixed;top:4px;right:8px;z-index:2147483647;font:26px/1 sans-serif;color:rgba(0,0,0,.35);cursor:pointer;padding:8px;user-select:none;touch-action:manipulation;';
-      x2.addEventListener('pointerdown', function () { f.remove(); x2.remove(); document.documentElement.style.overflow = ''; on = false; b = ''; });
-      document.documentElement.style.overflow = 'hidden';
-      document.body.appendChild(f);
-      document.body.appendChild(x2);
+      ask(JSON.parse(new TextDecoder().decode(pt)));
     }).catch(function () { on = false; b = ''; });
+  }
+  function ask(Q) {
+    var ov = document.createElement('div');
+    ov.style.cssText = 'position:fixed;inset:0;z-index:2147483647;background:#fff;display:flex;align-items:center;justify-content:center;padding:1rem;';
+    var bx = document.createElement('div');
+    bx.style.cssText = 'width:min(92vw,400px);font:15px/1.6 "Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:#000;';
+    var ins = [];
+    Q.q.forEach(function (t) {
+      var lb = document.createElement('div');
+      lb.textContent = t;
+      lb.style.cssText = 'margin:14px 0 4px;font-weight:600;';
+      var ip = document.createElement('input');
+      ip.type = 'text';
+      ip.autocomplete = 'off';
+      ip.style.cssText = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid #767676;border-radius:0;font:inherit;outline:none;transition:border-color .2s;';
+      ip.addEventListener('focus', function () { ip.style.borderColor = '#000'; });
+      ip.addEventListener('blur', function () { ip.style.borderColor = '#767676'; });
+      bx.appendChild(lb); bx.appendChild(ip); ins.push(ip);
+    });
+    var msg = document.createElement('div');
+    msg.style.cssText = 'min-height:22px;margin-top:10px;font-size:13px;color:#767676;';
+    var row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:12px;margin-top:4px;';
+    var btn = document.createElement('button');
+    btn.textContent = '进入';
+    btn.style.cssText = 'padding:8px 24px;border:1px solid #000;background:#fff;color:#000;font:inherit;font-weight:600;cursor:pointer;border-radius:0;';
+    var x2 = document.createElement('div');
+    x2.textContent = '×';
+    x2.style.cssText = 'margin-left:auto;font:22px/1 sans-serif;color:rgba(0,0,0,.35);cursor:pointer;padding:4px 8px;user-select:none;touch-action:manipulation;';
+    x2.addEventListener('pointerdown', function () { ov.remove(); document.documentElement.style.overflow = ''; on = false; b = ''; });
+    row.appendChild(btn); row.appendChild(x2);
+    bx.appendChild(row); bx.appendChild(msg);
+    function go() {
+      var pass = ins.map(function (ip) { return ip.value.trim().replace(/\s+/g, '').toLowerCase(); }).join('');
+      btn.disabled = true; msg.textContent = '';
+      btn.textContent = '···';
+      fetch(C.x).then(function (r) { return r.arrayBuffer(); }).then(function (ab) {
+        var u = new Uint8Array(ab);
+        return dk(pass, u.slice(0, 16), Q.n).then(function (k) { return dec(u, k).then(function () { return k; }); });
+      }).then(function (k) {
+        return crypto.subtle.exportKey('raw', k);
+      }).then(function (raw) {
+        var s = '', v = new Uint8Array(raw);
+        for (var i = 0; i < v.length; i++) s += String.fromCharCode(v[i]);
+        try { sessionStorage.setItem('qk', btoa(s)); } catch (e) {}
+        location.href = C.g;
+      }).catch(function () {
+        btn.disabled = false; btn.textContent = '进入'; msg.textContent = '答案不正确';
+      });
+    }
+    btn.addEventListener('pointerdown', function () { go(); });
+    ins.forEach(function (ip, i) {
+      ip.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Enter') {
+          ev.preventDefault();
+          if (ins[i + 1]) ins[i + 1].focus(); else go();
+        }
+      });
+    });
+    document.documentElement.style.overflow = 'hidden';
+    ov.appendChild(bx);
+    document.body.appendChild(ov);
+    if (ins[0]) ins[0].focus();
   }
 })();
 </script>

@@ -1,0 +1,268 @@
+---
+// ispirare：独立页面。
+import '../styles/global.css';
+---
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>·</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <script is:inline>
+      (function () {
+        var IDX = '/assets/19740d21.bin', ITER = 300000, SK = 'qk';
+        var QC;
+        try { QC = JSON.parse(atob('eyJzIjoiQUFBQkJBQUFBQSIsInAiOiIvYXNzZXRzLzE2ZTRiMTc1LmJpbiIsIm4iOjYwMDAwfQ==')); } catch (e) {}
+        var app = document.getElementById('app');
+        app = app || document.body;
+        var key = null, items = [], quests = null, gateLabels = [];
+        function updateLabels() {
+          gateLabels.forEach(function (lb, i) { if (quests && quests[i]) lb.textContent = quests[i]; });
+        }
+        var FONT = '15px/1.7 "Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif';
+
+        function b64u8(s) { var t = atob(s), u = new Uint8Array(t.length); for (var i = 0; i < t.length; i++) u[i] = t.charCodeAt(i); return u; }
+        function fetchBuf(p) { return fetch(p).then(function (r) { return r.arrayBuffer(); }).then(function (ab) { return new Uint8Array(ab); }); }
+        function dec(u, k) { return crypto.subtle.decrypt({ name: 'AES-GCM', iv: u.slice(16, 28) }, k, u.slice(28)); }
+        function openBuf(u) { return dec(u, key).then(function (pt) { return new TextDecoder().decode(pt); }); }
+        function derive(pass, salt) {
+          var e = new TextEncoder();
+          return crypto.subtle.importKey('raw', e.encode(pass), 'PBKDF2', false, ['deriveKey']).then(function (k) {
+            return crypto.subtle.deriveKey({ name: 'PBKDF2', salt: salt, iterations: ITER, hash: 'SHA-256' }, k, { name: 'AES-GCM', length: 256 }, true, ['decrypt']);
+          });
+        }
+        function clear() { try { sessionStorage.removeItem(SK); } catch (e) {} }
+
+        // —— 启动：有会话密钥直接进索引，否则落三问框 ——
+        window.addEventListener('hashchange', route);   // 只绑一次；items 为空时 route 无害
+        (function () {   // 后台解三问文案（序列密钥），解出后刷新 gate 的标签
+          if (!QC) return;
+          fetchBuf(QC.p).then(function (u) {
+            var e = new TextEncoder();
+            return crypto.subtle.importKey('raw', e.encode(QC.s), 'PBKDF2', false, ['deriveKey']).then(function (k0) {
+              return crypto.subtle.deriveKey({ name: 'PBKDF2', salt: u.slice(0, 16), iterations: QC.n, hash: 'SHA-256' }, k0, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+            }).then(function (k0) { return dec(u, k0); });
+          }).then(function (pt) {
+            quests = JSON.parse(new TextDecoder().decode(pt)).q;
+            if (quests && quests.length === 3) updateLabels();
+          }).catch(function () {});
+        })();
+        var sk = null;
+        try { sk = sessionStorage.getItem(SK); } catch (e) {}
+        if (sk) {
+          crypto.subtle.importKey('raw', b64u8(sk), { name: 'AES-GCM', length: 256 }, false, ['decrypt'])
+            .then(function (k) { key = k; return fetchBuf(IDX).then(openBuf); })
+            .then(function (s) { renderIndex(JSON.parse(s)); })
+            .catch(function () { key = null; clear(); gate(); });
+        } else gate();
+
+        // —— 三问框（直达本页的形态：不展示问题文案）——
+        function gate(hint) {
+          document.title = '·';
+          var ov = document.createElement('div');
+          ov.style.cssText = 'min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:1rem;';
+          var bx = document.createElement('div');
+          bx.style.cssText = 'width:min(92vw,400px);font:' + FONT + ';color:#000;';
+          var ins = [];
+          gateLabels.length = 0;
+          ['一', '二', '三'].forEach(function (t, i) {
+            var lb = document.createElement('div');
+            lb.textContent = (quests && quests[i]) || t;
+            lb.style.cssText = 'margin:14px 0 4px;font-weight:600;';
+            var ip = document.createElement('input');
+            ip.type = 'text'; ip.autocomplete = 'off';
+            ip.style.cssText = 'width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid #767676;border-radius:0;font:inherit;outline:none;transition:border-color .2s;';
+            ip.addEventListener('focus', function () { ip.style.borderColor = '#000'; });
+            ip.addEventListener('blur', function () { ip.style.borderColor = '#767676'; });
+            bx.appendChild(lb); bx.appendChild(ip); ins.push(ip); gateLabels.push(lb);
+          });
+          var msg = document.createElement('div');
+          msg.style.cssText = 'min-height:22px;margin-top:10px;font-size:13px;color:#767676;';
+          msg.textContent = hint || '';
+          var btn = document.createElement('button');
+          btn.textContent = '进入';
+          btn.style.cssText = 'margin-top:4px;padding:8px 24px;border:1px solid #000;background:#fff;color:#000;font:inherit;font-weight:600;cursor:pointer;border-radius:0;';
+          bx.appendChild(btn); bx.appendChild(msg);
+          function go() {
+            var pass = ins.map(function (ip) { return ip.value.trim().replace(/\s+/g, '').toLowerCase(); }).join('');
+            btn.disabled = true; msg.textContent = ''; btn.textContent = '···';
+            fetchBuf(IDX).then(function (u) {
+              return derive(pass, u.slice(0, 16)).then(function (k) {
+                return dec(u, k).then(function () { return k; });
+              });
+            }).then(function (k) {
+              key = k;
+              return crypto.subtle.exportKey('raw', k);
+            }).then(function (raw) {
+              var s = '', v = new Uint8Array(raw);
+              for (var i = 0; i < v.length; i++) s += String.fromCharCode(v[i]);
+              try { sessionStorage.setItem(SK, btoa(s)); } catch (e) {}
+              ov.remove(); boot();
+            }).catch(function () {
+              btn.disabled = false; btn.textContent = '进入'; msg.textContent = '答案不正确';
+            });
+          }
+          btn.addEventListener('pointerdown', function () { go(); });
+          ins.forEach(function (ip, i) {
+            ip.addEventListener('keydown', function (ev) {
+              if (ev.key === 'Enter') {
+                ev.preventDefault();
+                if (ins[i + 1]) ins[i + 1].focus(); else go();
+              }
+            });
+          });
+          ov.appendChild(bx); app.appendChild(ov);
+          if (ins[0]) ins[0].focus();
+        }
+
+        function boot() {
+          fetchBuf(IDX).then(openBuf).then(function (s) { renderIndex(JSON.parse(s)); })
+            .catch(function () { key = null; clear(); app.innerHTML = ''; gate(); });
+        }
+
+        // —— 索引视图 ——
+        function renderIndex(idx) {
+          document.title = idx.t;
+          items = idx.items;
+          app.innerHTML = '';
+          var wrap = document.createElement('div');
+          wrap.style.cssText = 'max-width:880px;margin:0 auto;padding:2.2rem 1.2rem 4rem;font:' + FONT + ';';
+          var bar = document.createElement('div');
+          bar.style.cssText = 'display:flex;align-items:baseline;gap:.8rem;margin-bottom:1.4rem;';
+          var h = document.createElement('div');
+          h.textContent = idx.t;
+          h.style.cssText = 'font-size:1.35rem;font-weight:700;';
+          var out = document.createElement('div');
+          out.textContent = '退出';
+          out.style.cssText = 'margin-left:auto;font-size:.85rem;font-weight:600;color:#767676;cursor:pointer;padding:2px 4px;';
+          out.addEventListener('pointerdown', function () { clear(); location.href = '/'; });
+          bar.appendChild(h); bar.appendChild(out);
+          wrap.appendChild(bar);
+          var list = document.createElement('div');
+          list.id = 'xl';
+          wrap.appendChild(list);
+          app.appendChild(wrap);
+          route();
+        }
+
+        function route() {
+          var id = location.hash.slice(1);
+          var it = null;
+          for (var i = 0; i < items.length; i++) if (items[i].i === id) it = items[i];
+          if (!it) { list(); return; }
+          if (it.k === 'game') game(it); else story(it);
+        }
+
+        function list() {
+          var el = document.getElementById('xl');
+          if (!el) return;
+          el.innerHTML = '';
+          var lastS = null, lastG = null, secCnt = 0;
+          items.forEach(function (it) {
+            if (it.sec && it.sec !== lastS) {
+              var sh = document.createElement('div');
+              sh.textContent = it.sec;
+              sh.style.cssText = 'margin:' + (el.children.length ? '1.8rem' : '0') + ' 0 .7rem;font-weight:700;font-size:1.18rem;';
+              el.appendChild(sh);
+              lastS = it.sec; lastG = null; secCnt = 0;
+            }
+            if (it.g && it.g !== lastG) {
+              if (secCnt) {
+                var hr = document.createElement('div');
+                hr.style.cssText = 'border-top:1px solid #767676;margin:1.5rem 0 0;';
+                el.appendChild(hr);
+              }
+              var gh = document.createElement('div');
+              gh.textContent = it.g;
+              gh.style.cssText = 'margin:' + (secCnt ? '1rem' : '.3rem') + ' 0 .55rem;font-weight:700;font-size:1.02rem;border-bottom:1px solid #767676;padding-bottom:.35rem;';
+              el.appendChild(gh);
+            }
+            lastG = it.g;
+            var a = document.createElement('a');
+            a.href = '#' + it.i;
+            a.style.cssText = 'display:flex;align-items:center;padding:.7rem .9rem;margin-bottom:.55rem;border:1px solid #767676;border-radius:0;color:#000;text-decoration:none;font-size:.95rem;transition:border-color .45s cubic-bezier(.22,1,.36,1),box-shadow .45s cubic-bezier(.22,1,.36,1);';
+            a.addEventListener('pointerenter', function () { a.style.borderColor = '#000'; a.style.boxShadow = '0 0 0 2px #000'; });
+            a.addEventListener('pointerleave', function () { a.style.borderColor = '#767676'; a.style.boxShadow = 'none'; });
+            var t = document.createElement('div');
+            t.textContent = it.t;
+            t.style.cssText = 'font-weight:600;';
+            a.appendChild(t);
+            if (it.s) {
+              var s = document.createElement('div');
+              s.textContent = it.s;
+              s.style.cssText = 'margin-left:auto;color:#767676;font-size:.8rem;font-weight:400;';
+              a.appendChild(s);
+            }
+            el.appendChild(a);
+            secCnt++;
+          });
+        }
+
+        // —— 小说视图 ——
+        function story(it) {
+          var el = document.getElementById('xl');
+          if (!el) return;
+          el.innerHTML = '<div style="color:#767676;font-size:.85rem;">···</div>';
+          fetchBuf('/assets/' + it.f).then(openBuf).then(function (html) {
+            el.innerHTML = '';
+            var back = document.createElement('a');
+            back.href = '#';
+            back.textContent = '← 返回目录';
+            back.style.cssText = 'display:inline-block;margin-bottom:1rem;font-size:.85rem;font-weight:600;color:#767676;text-decoration:none;';
+            back.addEventListener('pointerenter', function () { back.style.textDecoration = 'underline'; });
+            back.addEventListener('pointerleave', function () { back.style.textDecoration = 'none'; });
+            var h = document.createElement('div');
+            h.textContent = it.t;
+            h.style.cssText = 'font-size:1.5rem;font-weight:700;margin-bottom:1.2rem;';
+            var body = document.createElement('div');
+            body.className = 'prose';
+            body.innerHTML = html;
+            el.appendChild(back); el.appendChild(h); el.appendChild(body);
+            window.scrollTo(0, 0);
+          }).catch(function () { key = null; clear(); app.innerHTML = ''; gate('会话已过期，请重新验证'); });
+        }
+
+        // —— 运行时视图（解包后整包运行）——
+        function game(it) {
+          var el = document.getElementById('xl');
+          if (!el) return;
+          el.innerHTML = '<div style="color:#767676;font-size:.85rem;">···</div>';
+          fetchBuf('/assets/' + it.f).then(openBuf).then(function (s) {
+            var M = JSON.parse(s);
+            var ty = { html: 'text/html', js: 'text/javascript', css: 'text/css', webp: 'image/webp', png: 'image/png' };
+            var tx = { html: 1, js: 1, css: 1, json: 1, txt: 1, svg: 1 };
+            var map = {};
+            Object.keys(M.f).forEach(function (k) {
+              var x = k.split('.').pop().toLowerCase(), v = M.f[k], d;
+              if (tx[x]) { d = v; }
+              else {
+                var b = atob(v);
+                d = new Uint8Array(b.length);
+                for (var i = 0; i < b.length; i++) d[i] = b.charCodeAt(i);
+              }
+              map[k] = URL.createObjectURL(new Blob([d], { type: ty[x] || 'application/octet-stream' }));
+            });
+            var doc = M.f[M.e].replace(/(src|href)="([^"]+)"/g, function (_, a, p) { return a + '="' + (map[p.replace(/^\.\//, '')] || p) + '"'; });
+            var shim = '<script>var __m=' + JSON.stringify(map) + ';(function(){var d=Object.getOwnPropertyDescriptor(HTMLImageElement.prototype,"src");Object.defineProperty(HTMLImageElement.prototype,"src",{set:function(v){d.set.call(this,__m[String(v).replace(/^\\.\\//,"")]||v);},get:function(){return d.get.call(this);}});})();<\/script>';
+            doc = doc.replace('</head>', function () { return shim + '</head>'; });
+            var f = document.createElement('iframe');
+            f.setAttribute('srcdoc', doc);
+            f.setAttribute('allow', 'autoplay');
+            f.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;border:0;background:#fff;z-index:2147483647;';
+            var x2 = document.createElement('div');
+            x2.textContent = '×';
+            x2.style.cssText = 'position:fixed;top:4px;right:8px;z-index:2147483647;font:26px/1 sans-serif;color:rgba(0,0,0,.35);cursor:pointer;padding:8px;user-select:none;touch-action:manipulation;';
+            x2.addEventListener('pointerdown', function () { f.remove(); x2.remove(); location.hash = ''; });
+            document.body.appendChild(f);
+            document.body.appendChild(x2);
+          }).catch(function () { key = null; clear(); app.innerHTML = ''; gate('会话已过期，请重新验证'); });
+        }
+      })();
+    </script>
+  </body>
+</html>
